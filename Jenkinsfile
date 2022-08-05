@@ -1,7 +1,7 @@
 pipeline{
     agent any
     tools {
-      maven 'maven3'
+      maven 'maven-3'
     }
     environment {
       DOCKER_TAG = getVersion()
@@ -9,8 +9,7 @@ pipeline{
     stages{
         stage('SCM'){
             steps{
-                git credentialsId: 'github', 
-                    url: 'https://github.com/jaymezon/docker-ansible-jenkins'
+                git branch: 'main', credentialsId: 'github', url: 'https://github.com/jaymezon/docker-ansible-jenkins'
             }
         }
         
@@ -20,19 +19,20 @@ pipeline{
             }
         }
         
-        stage('Docker Build'){
+        stage('Docker Build Image'){
             steps{
-                sh "docker build . -t jaymezon/hariapp:${DOCKER_TAG} "
+                sh "docker build . -t jaymezon/sembeapp:${DOCKER_TAG} "
             }
         }
         
-        stage('DockerHub Push'){
+        stage('DockerHub Push Image'){
             steps{
+                // login to dockerhub account and push image
                 withCredentials([string(credentialsId: 'docker-hub', variable: 'dockerHubPwd')]) {
                     sh "docker login -u jaymezon -p ${dockerHubPwd}"
                 }
                 
-                sh "docker push jaymezon/hariapp:${DOCKER_TAG} "
+                sh "docker push jaymezon/sembeapp:${DOCKER_TAG} "
             }
         }
         

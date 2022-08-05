@@ -3,11 +3,13 @@
   become: True
   tasks:
     - name: Install python pip
-      yum:
+      # yum:
+      pip:
         name: python-pip
         state: present
     - name: Install docker
-      yum:
+      # yum:
+      pip:
         name: docker
         state: present
     - name: start docker
@@ -21,8 +23,8 @@
         state: present
     - name: Start the container
       docker_container:
-        name: hariapp
-        image: "jaymezon/hariapp:{{DOCKER_TAG}}"
+        name: sembeapp
+        image: "jaymezon/sembeapp:{{DOCKER_TAG}}"
         state: started
         published_ports:
           - 0.0.0.0:8080:8080
